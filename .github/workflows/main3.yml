@@ -39,7 +39,7 @@ jobs:
             
             // Wait for 50 minutes
             console.log('Waiting for 50 minutes...');
-            await delay(3000 * 60); // Wait for 3000 seconds (50 minutes)
+            await delay(3000 * 60 * 1000); // Wait for 3000 seconds (50 minutes)
             
             // Optionally take a screenshot or perform other actions here
             await page.screenshot({ path: 'screenshot.png' });
