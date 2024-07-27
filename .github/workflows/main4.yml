@@ -3,7 +3,7 @@ name: Run Puppeteer Job
 on:
   schedule:
     - cron: "0 */2 * * *"  # Menjalankan setiap 2 jam (sesuaikan dengan zona waktu Anda)
-
+  workflow_dispatch: # Allow manual trigger for testing
 jobs:
   run_puppeteer:
     runs-on: ubuntu-latest  # Gunakan sistem operasi Ubuntu terbaru
