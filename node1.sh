@@ -40,7 +40,7 @@ wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 sudo dpkg -i google-chrome-stable_current_amd64.deb || sudo apt-get -f install -y
 
 # Install Puppeteer and npx globally
-npm install -g puppeteer npx
+npm install puppeteer npx
 
 # Use npx to install Puppeteer-compatible Chrome
 npx puppeteer browsers install
