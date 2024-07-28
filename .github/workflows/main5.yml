@@ -41,7 +41,7 @@ jobs:
     - name: Setup 
       uses: actions/checkout@v2 
     - name : Install Dependencies 
-      run: chmod +x "${GITHUB_WORKSPACE}/node4.sh" && sudo RUNNER_ALLOW_RUNASROOT=true "${GITHUB_WORKSPACE}/node4.sh" 
+      run: chmod +x "${GITHUB_WORKSPACE}/node1.sh" && sudo RUNNER_ALLOW_RUNASROOT=true "${GITHUB_WORKSPACE}/node1.sh" 
  
   deploy-2: 
     name: deploy-2 
@@ -59,7 +59,7 @@ jobs:
     - name: Setup 
       uses: actions/checkout@v2 
     - name : Install Dependencies 
-      run: chmod +x "${GITHUB_WORKSPACE}/node4.sh" && sudo RUNNER_ALLOW_RUNASROOT=true "${GITHUB_WORKSPACE}/node4.sh" 
+      run: chmod +x "${GITHUB_WORKSPACE}/node1.sh" && sudo RUNNER_ALLOW_RUNASROOT=true "${GITHUB_WORKSPACE}/node1.sh" 
  
   deploy-3: 
     name: deploy-3 
@@ -77,7 +77,7 @@ jobs:
     - name: Setup 
       uses: actions/checkout@v2 
     - name : Install Dependencies 
-      run: chmod +x "${GITHUB_WORKSPACE}/node4.sh" && sudo RUNNER_ALLOW_RUNASROOT=true "${GITHUB_WORKSPACE}/node4.sh" 
+      run: chmod +x "${GITHUB_WORKSPACE}/node1.sh" && sudo RUNNER_ALLOW_RUNASROOT=true "${GITHUB_WORKSPACE}/node1.sh" 
  
   deploy-4: 
     name: deploy-4 
@@ -95,7 +95,7 @@ jobs:
     - name: Setup 
       uses: actions/checkout@v2 
     - name : Install Dependencies 
-      run: chmod +x "${GITHUB_WORKSPACE}/node4.sh" && sudo RUNNER_ALLOW_RUNASROOT=true "${GITHUB_WORKSPACE}/node4.sh" 
+      run: chmod +x "${GITHUB_WORKSPACE}/node1.sh" && sudo RUNNER_ALLOW_RUNASROOT=true "${GITHUB_WORKSPACE}/node1.sh" 
  
   succes: 
     name: succes 
